@@ -106,7 +106,8 @@ db.exec(`
 
 const supabaseUrl = process.env.SUPABASE_URL || "";
 const supabaseKey = process.env.SUPABASE_ANON_KEY || "";
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Safely initialize the client ONLY if we have variables (prevents server crash)
+const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null as any;
 
 const INITIAL_PRODUCTS = [
   {
@@ -325,6 +326,15 @@ async function startServer() {
     const { email, password } = req.body;
     
     try {
+      // Local Dev Fallback Restored
+      if (!supabaseUrl || !supabaseKey) {
+        if (email === "admin@pixies-pantry.com" && password === "admin") {
+          req.session.isAdmin = true;
+          return res.json({ success: true });
+        }
+        return res.status(401).json({ error: "Invalid credentials (Local Dev)" });
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
