@@ -280,7 +280,7 @@ export default function App() {
   const [loginError, setLoginError] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS); // <--- OVERRIDE APPLIED HERE
+  const [products, setProducts] = useState<Product[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [showNewsletter, setShowNewsletter] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState("");
